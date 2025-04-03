@@ -23,8 +23,8 @@ public:
 	 * @param[in] near_plane Near plane distance.
 	 * @param[in] far_plane Far plane distance, must be larger than the near plane.
 	*/
-	inline constexpr Camera(float vertical_fov, float aspect_ratio, float near_plane, float far_plane) noexcept 
-		: m_vertical_fov(vertical_fov), m_aspect_ratio(aspect_ratio), m_near_plane(near_plane), m_far_plane(far_plane), m_position(0.0f) {}
+	inline constexpr Camera(float vertical_fov, float aspect_ratio, float near_plane, float far_plane, float pitch_sens, float yaw_sens) noexcept 
+		: m_vertical_fov(vertical_fov), m_aspect_ratio(aspect_ratio), m_near_plane(near_plane), m_far_plane(far_plane), m_position(0.0f), m_pitch(0), m_yaw(0), m_pitch_sens(pitch_sens), m_yaw_sens(yaw_sens), m_rotation(1.0f) {}
 
 	/**
 	 * @brief Move the camera to a new position
@@ -36,7 +36,28 @@ public:
 	 * @brief Move the camera along a vector
 	 * @param[in] direction Direction to move along
 	*/
-	void Move(const linalg::vec3f& direction) noexcept;
+	void Move(const linalg::vec4f& direction, const float velocity) noexcept;
+
+	/**
+	* @brief Rotates the camera to a new position
+	* @param[in] pitch Amount of pitch to set the camera to
+	* @param[in] yaw Amount of yaw to set the camera to
+	*/
+	void RotateTo(const long& pitch, const long& yaw) noexcept;
+
+	/**
+	 * @brief Rotates the camera view
+	 * @param[in] pitch Amount to pitch the camera
+	 * @param[in] yaw Amount to yaw the camera
+	*/
+	void Rotate(const long& pitch, const long& yaw) noexcept;
+
+	/**
+	 * @brief Changes the mouse sensitivity
+	 * @param[in] pitch Amount to change the pitch sensitivity
+	 * @param[in] yaw Amount to change the yaw sensitivity
+	*/
+	void ChangeSens(const float& pitch_sens, const float& yaw_sens) noexcept;
 
 	/**
 	 * @brief Changes the camera aspect ratio.
@@ -50,6 +71,13 @@ public:
 	*/
 	linalg::mat4f WorldToViewMatrix() const noexcept;
 
+
+	/**
+	* @brief Get the View-to-World matrix of the camera
+	* @return View-to-World matrix
+	*/
+	linalg::mat4f ViewToWorldMatrix() const noexcept;
+
 	/**
 	 * @brief get the Matrix transforming from View space to Clip space
 	 * @return Projection matrix.
@@ -57,6 +85,8 @@ public:
 	 * @note In a performance sensitive situation this matrix should be precomputed if possible
 	*/
 	linalg::mat4f ProjectionMatrix() const noexcept;
+
+	linalg::vec4f GetCamPosVec4f() const noexcept;
 
 private:
 	// Aperture attributes
@@ -73,6 +103,12 @@ private:
 	float m_far_plane;
 
 	linalg::vec3f m_position;
+	linalg::vec4f m_movement;
+	float m_pitch;
+	float m_yaw;
+	float m_pitch_sens;
+	float m_yaw_sens;
+	linalg::mat4f m_rotation;
 };
 
 #endif

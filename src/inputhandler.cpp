@@ -29,6 +29,7 @@ bool InputHandler::Initialize(HINSTANCE hInstance, HWND hWnd, int screenWidth, i
 	m_screen_width = screenWidth;
 	m_mouse_x = 0;
 	m_mouse_y = 0;
+	m_mouse_z = 0;
 	HRESULT result;
 	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_direct_input, nullptr);
 	if (FAILED(result)){
@@ -142,6 +143,11 @@ LONG InputHandler::GetMouseDeltaY() const noexcept
 	return m_mouse_state.lY;
 }
 
+LONG InputHandler::GetMouseDeltaZ() const noexcept
+{
+	return m_mouse_state.lZ;
+}
+
 bool InputHandler::ReadKeyboard() noexcept
 {
 	HRESULT result;
@@ -186,4 +192,5 @@ void InputHandler::ProcessInput() noexcept
 {
 	m_mouse_x += m_mouse_state.lX;
 	m_mouse_y += m_mouse_state.lY;
+	m_mouse_z += m_mouse_state.lZ;
 }

@@ -57,6 +57,21 @@ OBJModel::OBJModel(
 	dxdevice->CreateBuffer(&indexbufferDesc, &indexData, &m_index_buffer);
 	SETNAME(m_index_buffer, "IndexBuffer");
 
+	
+	// Materials array descriptor
+	D3D11_BUFFER_DESC phongComponentsbufferDesc = { 0 };
+	phongComponentsbufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	phongComponentsbufferDesc.CPUAccessFlags = 0;
+	phongComponentsbufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	phongComponentsbufferDesc.MiscFlags = 0;
+	phongComponentsbufferDesc.ByteWidth = (UINT)(mesh->Materials.size() * sizeof(Material));
+	// Data resource
+	D3D11_SUBRESOURCE_DATA materialData = { 0 };
+	indexData.pSysMem = &(mesh->Materials)[0];
+	// Create material buffer on device using descriptor & data
+	dxdevice->CreateBuffer(&phongComponentsbufferDesc, &indexData, &m_phong_components_buffer);
+	SETNAME(m_phong_components_buffer, "PhongComponentsBuffer");
+
 	// Copy materials from mesh
 	append_materials(mesh->Materials);
 
@@ -83,6 +98,9 @@ OBJModel::OBJModel(
 	}
 	std::cout << "Done." << std::endl;
 
+
+
+
 	SAFE_DELETE(mesh);
 }
 
@@ -104,12 +122,16 @@ void OBJModel::Render() const
 
 		// Bind diffuse texture to slot t0 of the PS
 		m_dxdevice_context->PSSetShaderResources(0, 1, &material.DiffuseTexture.TextureView);
+		m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_phong_components_buffer);
 		// + bind other textures here, e.g. a normal map, to appropriate slots
+
 
 		// Make the drawcall
 		m_dxdevice_context->DrawIndexed(indexRange.Size, indexRange.Start, 0);
 	}
 }
+
+
 
 OBJModel::~OBJModel()
 {

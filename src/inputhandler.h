@@ -12,7 +12,7 @@
 /**
  * @brief Keycodes
 */
-enum class Keys 
+enum class Keys
 {
 	Left = DIK_LEFT,
 	Right = DIK_RIGHT,
@@ -21,7 +21,10 @@ enum class Keys
 	W = DIK_W,
 	A = DIK_A,
 	S = DIK_S,
-	D = DIK_D
+	D = DIK_D,
+	C = DIK_C,
+	Space = DIK_SPACE,
+	Ctrl = DIK_LCONTROL
 };
 
 /**
@@ -36,7 +39,7 @@ public:
 	 * @see Initialize(HINSTANCE, HWND, int, int)
 	*/
 	constexpr InputHandler() noexcept 
-		: m_direct_input(nullptr), m_keyboard(nullptr), m_mouse(nullptr), m_keyboard_state(), m_mouse_state(), m_previous_mouse_state(), m_screen_width(0), m_screen_height(0), m_mouse_x(0), m_mouse_y(0) {}
+		: m_direct_input(nullptr), m_keyboard(nullptr), m_mouse(nullptr), m_keyboard_state(), m_mouse_state(), m_previous_mouse_state(), m_screen_width(0), m_screen_height(0), m_mouse_x(0), m_mouse_y(0), m_mouse_z(0) {}
 
 	/**
 	 * @brief Destructor, does nothing, see Shutdown()
@@ -110,6 +113,12 @@ public:
 	*/
 	LONG GetMouseDeltaY() const noexcept;
 
+	/**
+	 * @brief Gets the mouse Z delta since last Update()
+	 * @return Change in mouse Z since last Update(), this should usually be the change of the mouse wheel
+	*/
+	LONG GetMouseDeltaZ() const noexcept;
+
 private:
 	IDirectInput8* m_direct_input;
 	IDirectInputDevice8* m_keyboard;
@@ -117,7 +126,7 @@ private:
 	unsigned char m_keyboard_state[256];
 	DIMOUSESTATE m_mouse_state, m_previous_mouse_state;
 	int m_screen_width, m_screen_height;
-	int m_mouse_x, m_mouse_y;
+	int m_mouse_x, m_mouse_y, m_mouse_z;
 
 	bool ReadKeyboard() noexcept;
 	bool ReadMouse() noexcept;

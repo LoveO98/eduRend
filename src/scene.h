@@ -79,6 +79,9 @@ class OurTestScene : public Scene
 	// CBuffer for transformation matrices
 	ID3D11Buffer* m_transformation_buffer = nullptr;
 	// + other CBuffers
+	ID3D11Buffer* m_point_light_buffer = nullptr;
+	ID3D11Buffer* m_phong_components_buffer = nullptr;
+
 
 	//
 	// Scene content
@@ -86,13 +89,29 @@ class OurTestScene : public Scene
 	Camera* m_camera;
 
 	Model* m_quad;
+
+
 	Model* m_sponza;
 
+	Model* m_cube;
+	Model* m_cube2;
+	Model* m_cube3;
+
+	Model* m_troyan_plane;
+	
 	mat4f m_sponza_transform;
 	mat4f m_quad_transform;
+	mat4f m_cube_transform;
+	mat4f m_cube2_transform;
+	mat4f m_cube3_transform;
+
+	mat4f m_troyan_plane_transform;
 
 	mat4f m_view_matrix;
 	mat4f m_projection_matrix;
+
+	// Point light for lab 2
+	vec4f m_point_light;
 
 	// Misc
 	float m_angle = 0;			// A per-frame updated rotation angle (radians)...
@@ -100,9 +119,21 @@ class OurTestScene : public Scene
 	float m_camera_velocity = 5.0f;	// Camera movement velocity in units/s
 	float m_fps_cooldown = 0;
 
+	// Adding camera mouse control
+	float m_camera_rotation = 0.5f; // Camera sensitivity in some arbitrary unit
+
 	void InitTransformationBuffer();
 
 	void UpdateTransformationBuffer(mat4f model_to_world_matrix, mat4f world_to_view_matrix, mat4f projection_matrix);
+
+
+	// ----------- POINT LIGHT BUFFER METHODS ----------
+	void InitPointLightBuffer();
+	
+	void UpdatePointLightBuffer(vec4f light_world_pos_vector, vec4f cam_world_pos_vector);
+
+
+	
 
 public:
 	/**

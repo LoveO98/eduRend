@@ -32,6 +32,9 @@ protected:
 	ID3D11Buffer* m_vertex_buffer = nullptr; //!< Pointer to gpu side vertex buffer
 	ID3D11Buffer* m_index_buffer = nullptr; //!< Pointer to gpu side index buffer
 
+	//Pointer to phong components
+	ID3D11Buffer* m_phong_components_buffer = nullptr;
+
 public:
 
 	/**
